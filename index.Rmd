@@ -1,0 +1,72 @@
+---
+title       : Great Schools Ratings by Race in Elementary Schools in Maryland USA
+subtitle    : 
+author      : Rich Banks
+job         : GIS Analyst
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Executive Summary 
+
+The purpose of this application was to plot a correlation between the percentage of a particular race at an elemntary school and it's school rating according to Great Schools (www.greatschools.org)
+
+By using the application, the user will be able to display a rating summary of one or multiple school districts in Maryland by the race of a user's choice. 
+
+Please note that this application only covers elementary schools in just a a few counties in the state of Maryland.
+
+--- .class #id 
+
+## The Data
+The input dataset was compiled from extracting the data from the Great Schools website using an API token that I registered for. By performing queries against their database using a standard HTML request I was able to create a .csv file from extracting information from the XML files which were created as a result of the query. 
+Ater much manipulation of the dataset, I was able to come up with a tidy dataset as seen below
+```{r}
+ schools <- read.csv("schooloutput_v2.csv")
+names(schools)
+ 
+
+```
+
+These values represent the following:  "name" is the name of the school , "r" is the rating , "dis" is the district, and the last several fields are values representing the percentage of the race at that particular school
+
+---
+
+## The Interface
+
+The first pull-down menu lets the user choose from different races represented in elementary schools in Maryland. The choices are : white, asian , hispanic, black, Native American, Pacific Islander and mixed race. 
+
+The multiple-checkbox below allows the user to choose which school district to get ratings information from.
+
+The tabs on the top-right let the user see a plot, a table summary by rating , and a complete table of the dataset based on their inputs.
+
+---
+
+## Sample Plot Output
+
+```{r ,fig.width=7, fig.height=4, echo=FALSE , cache = FALSE}
+
+library(ggplot2) 
+  myd <- subset(schools, dis == "Montgomery County Public Schools"  )
+  mydata <- data.frame(rating = myd$r, race = myd[,"white"] )
+   ggplot(mydata, aes(x = rating, y = race)) + geom_point(color="red") + labs(x="Great Schools Rating",y="Race Percentage") 
+   #qplot(rating, race, data = mydata)
+
+```
+
+---
+
+## Sources
+
+Data Source : http://www.greatschools.org
+
+Application  : http://richisgeo.shinyapps.io/SchoolRatings/
+
+
+
+---
+
+
